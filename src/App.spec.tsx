@@ -35,14 +35,14 @@ describe("App", () => {
     expect(screen.getByText("Porsche")).toBeInTheDocument();
   });
 
-  const clickSortIcon = (byText: string) => {
+  const clickSortColumn = (byText: string) => {
     fireEvent.click(screen.getByText(byText));
   };
 
   it("should be called when sorting", async () => {
     const filterFn = vi.fn();
     render(<App sortCallback={filterFn} />);
-    clickSortIcon("Make");
+    clickSortColumn("Make");
     await waitFor(() => expect(filterFn).toBeCalled());
   });
 
@@ -58,7 +58,7 @@ describe("App", () => {
       .fn()
       .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
     render(<App sortCallback={filterFn} />);
-    clickSortIcon("Make");
+    clickSortColumn("Make");
     await waitFor(() =>
       expect(getSortedColumn(sortEvent).getColId()).toEqual("make")
     );
