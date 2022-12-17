@@ -34,7 +34,7 @@ describe("Ag-grid", () => {
         await waitFor(() => expect(filterFn).toBeCalled());
       });
 
-      it("should get the filtered column name when sorting", async () => {
+      it("should get the sorted column name when sorting", async () => {
         let sortEvent: SortChangedEvent;
         const filterFn = vi
           .fn()
