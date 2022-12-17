@@ -8,6 +8,6 @@ export const getSortedColumns = (sortEvent: SortChangedEvent) => {
     .filter((col) => col.isSorting());
 };
 
-export const clickColumnHeaderOf = (byText: string) => {
+export const clickHeaderOf = (byText: string) => {
   fireEvent.click(getHeaderColumn(byText));
 };

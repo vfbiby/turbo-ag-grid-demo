@@ -60,7 +60,7 @@ const rowWithId = (rowId: number) => {
 };
 
 // helper method to find a row id and cell named in that row
-const getRowCellNamed = (rowId: number, cellName: string) => {
+const getRowCellNamedWithRowId = (rowId: number, cellName: string) => {
   return document.querySelector(rowWithId(rowId) + " " + columnNamed(cellName));
 };
 
@@ -106,7 +106,7 @@ export const rowWithIndexId = (indexId: number) => {
   return `.ag-row[row-index="${indexId}"]`;
 };
 
-export function getRowWithIndexIdCellNamed(indexId: number, cellName: string) {
+export function getRowCellNamed(indexId: number, cellName: string) {
   return document.querySelector(
     rowWithIndexId(indexId) + " " + columnNamed(cellName)
   );
@@ -138,5 +138,5 @@ export {
   getNamedCellsWithValues,
   findFirstContainerElementWithClass,
   getCellValue,
-  getRowCellNamed,
+  getRowCellNamedWithRowId,
 };

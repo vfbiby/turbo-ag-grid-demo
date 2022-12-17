@@ -2,11 +2,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { vi } from "vitest";
 import { SortChangedEvent } from "ag-grid-community";
-import { clickColumnHeaderOf, getSortedColumns } from "./utils/GridUtils";
+import { clickHeaderOf, getSortedColumns } from "./utils/GridUtils";
 import { userEvent } from "@storybook/testing-library";
 import {
+  getRowCellNamedWithRowId,
   getRowCellNamed,
-  getRowWithIndexIdCellNamed,
   headerColumnNamed,
   waitForDataToHaveLoaded,
   waitForGridToBeInTheDOM,
@@ -23,8 +23,10 @@ describe("Ag-grid", () => {
     it("should show data row", async () => {
       render(<App />);
       await waitForDataToHaveLoaded();
-      expect(getRowCellNamed(0, "make")?.textContent).toEqual("Toyota");
-      expect(getRowCellNamed(1, "make")?.textContent).toEqual("Ford");
+      expect(getRowCellNamedWithRowId(0, "make")?.textContent).toEqual(
+        "Toyota"
+      );
+      expect(getRowCellNamedWithRowId(1, "make")?.textContent).toEqual("Ford");
     });
   });
 
@@ -33,7 +35,7 @@ describe("Ag-grid", () => {
       it("should be called when sorting", async () => {
         const filterFn = vi.fn();
         render(<App sortCallback={filterFn} />);
-        clickColumnHeaderOf("Make");
+        clickHeaderOf("Make");
         await waitFor(() => expect(filterFn).toBeCalled());
       });
 
@@ -43,7 +45,7 @@ describe("Ag-grid", () => {
           .fn()
           .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
         render(<App sortCallback={filterFn} />);
-        clickColumnHeaderOf("Make");
+        clickHeaderOf("Make");
         await waitFor(() =>
           expect(getSortedColumns(sortEvent)[0].getColId()).toEqual("make")
         );
@@ -83,9 +85,7 @@ describe("Ag-grid", () => {
       await waitFor(() =>
         expect(screen.queryByText("Celica")).not.toBeInTheDocument()
       );
-      expect(getRowWithIndexIdCellNamed(0, "make")?.textContent).toEqual(
-        "Porsche"
-      );
+      expect(getRowCellNamed(0, "make")?.textContent).toEqual("Porsche");
     });
   });
 });
