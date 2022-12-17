@@ -2,16 +2,13 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { vi } from "vitest";
 import { SortChangedEvent } from "ag-grid-community";
-import { clickHeaderOf, getSortedColumns } from "./utils/GridUtils";
+import { clickHeaderSortIconOf, getSortedColumns } from "./utils/GridUtils";
 import { userEvent } from "@storybook/testing-library";
 import {
-  getRowCellNamedWithRowId,
-  getRowCellNamed,
-  headerColumnNamed,
   waitForDataToHaveLoaded,
   waitForGridToBeInTheDOM,
 } from "./utils/AgGridTestUtils";
-import assert from "node:assert/strict";
+import { AgGridSelector } from "./utils/AgGridSelector";
 
 describe("Ag-grid", () => {
   describe("Layout", () => {
@@ -22,11 +19,14 @@ describe("Ag-grid", () => {
 
     it("should show data row", async () => {
       render(<App />);
+      let gridSelector = new AgGridSelector();
       await waitForDataToHaveLoaded();
-      expect(getRowCellNamedWithRowId(0, "make")?.textContent).toEqual(
+      expect(gridSelector.getRowOf(0).getByColumn("make").getText()).toEqual(
         "Toyota"
       );
-      expect(getRowCellNamedWithRowId(1, "make")?.textContent).toEqual("Ford");
+      expect(gridSelector.getRowOf(1).getByColumn("make").getText()).toEqual(
+        "Ford"
+      );
     });
   });
 
@@ -35,7 +35,7 @@ describe("Ag-grid", () => {
       it("should be called when sorting", async () => {
         const filterFn = vi.fn();
         render(<App sortCallback={filterFn} />);
-        clickHeaderOf("Make");
+        clickHeaderSortIconOf("Make");
         await waitFor(() => expect(filterFn).toBeCalled());
       });
 
@@ -45,7 +45,7 @@ describe("Ag-grid", () => {
           .fn()
           .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
         render(<App sortCallback={filterFn} />);
-        clickHeaderOf("Make");
+        clickHeaderSortIconOf("Make");
         await waitFor(() =>
           expect(getSortedColumns(sortEvent)[0].getColId()).toEqual("make")
         );
@@ -65,27 +65,19 @@ describe("Ag-grid", () => {
   });
 
   describe("filtering", () => {
-    function getHeaderFilterIcon(byText: string) {
-      let element = document
-        .querySelector(headerColumnNamed(byText))
-        ?.querySelector("span.ag-icon-menu");
-      assert(
-        element !== null && element !== undefined,
-        `Unable to find an header element with text ${byText}.`
-      );
-      return element;
-    }
-
     it("should filter data", async () => {
       render(<App />);
       await waitForDataToHaveLoaded();
+      let gridSelector = new AgGridSelector();
       expect(screen.queryByText("Celica")).toBeInTheDocument();
-      userEvent.click(getHeaderFilterIcon("Model"));
+      userEvent.click(gridSelector.getHeaderOf("Model").getFilterIcon());
       userEvent.type(screen.getAllByPlaceholderText("Filter...")[0], "Box");
       await waitFor(() =>
         expect(screen.queryByText("Celica")).not.toBeInTheDocument()
       );
-      expect(getRowCellNamed(0, "make")?.textContent).toEqual("Porsche");
+      expect(gridSelector.getRowOf(0).getByColumn("Make").getText()).toEqual(
+        "Porsche"
+      );
     });
   });
 });

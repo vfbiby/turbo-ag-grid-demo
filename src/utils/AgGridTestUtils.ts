@@ -55,15 +55,6 @@ const columnNamed = (cellName: string) => {
   return `.ag-cell[col-id="${cellName}"]`;
 };
 
-const rowWithId = (rowId: number) => {
-  return `.ag-row[row-id="${rowId}"]`;
-};
-
-// helper method to find a row id and cell named in that row
-const getRowCellNamedWithRowId = (rowId: number, cellName: string) => {
-  return document.querySelector(rowWithId(rowId) + " " + columnNamed(cellName));
-};
-
 // given a cell, get the value of the cell
 const getCellValue = (cell: Element) => {
   return cell;
@@ -102,31 +93,6 @@ const getFirstRowWithNamedCellValue = (cellName: string, cellValue: string) => {
   return undefined;
 };
 
-export const rowWithIndexId = (indexId: number) => {
-  return `.ag-row[row-index="${indexId}"]`;
-};
-
-export function getRowCellNamed(indexId: number, cellName: string) {
-  return document.querySelector(
-    rowWithIndexId(indexId) + " " + columnNamed(cellName)
-  );
-}
-
-export const headerColumnNamed = (cellName: string) => {
-  return `.ag-header-cell[col-id="${cellName.toLowerCase()}"]`;
-};
-
-export function getHeaderColumn(byText: string) {
-  const element = document
-    .querySelector(headerColumnNamed(byText.toLowerCase()))
-    ?.querySelector<HTMLElement>(" .ag-header-cell-text");
-  assert(
-    element !== null && element !== undefined,
-    `Unable to find an header element with text ${byText}.`
-  );
-  return element;
-}
-
 export {
   // synchronisation methods
   waitForGridToBeInTheDOM,
@@ -138,5 +104,4 @@ export {
   getNamedCellsWithValues,
   findFirstContainerElementWithClass,
   getCellValue,
-  getRowCellNamedWithRowId,
 };

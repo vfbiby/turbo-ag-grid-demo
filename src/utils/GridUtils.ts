@@ -1,6 +1,6 @@
 import { SortChangedEvent } from "ag-grid-community";
 import { fireEvent } from "@testing-library/react";
-import { getHeaderColumn } from "./AgGridTestUtils";
+import { AgGridSelector } from "./AgGridSelector";
 
 export const getSortedColumns = (sortEvent: SortChangedEvent) => {
   return sortEvent.columnApi
@@ -8,6 +8,7 @@ export const getSortedColumns = (sortEvent: SortChangedEvent) => {
     .filter((col) => col.isSorting());
 };
 
-export const clickHeaderOf = (byText: string) => {
-  fireEvent.click(getHeaderColumn(byText));
+export const clickHeaderSortIconOf = (byText: string) => {
+  let gridSelector = new AgGridSelector();
+  fireEvent.click(gridSelector.getHeaderOf(byText).getSortIcon());
 };
