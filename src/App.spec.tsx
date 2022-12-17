@@ -6,9 +6,12 @@ import { clickColumnHeaderOf, getSortedColumns } from "./utils/GridUtils";
 import { userEvent } from "@storybook/testing-library";
 import {
   getRowCellNamed,
+  getRowWithIndexIdCellNamed,
+  headerColumnNamed,
   waitForDataToHaveLoaded,
   waitForGridToBeInTheDOM,
 } from "./utils/AgGridTestUtils";
+import assert from "node:assert/strict";
 
 describe("Ag-grid", () => {
   describe("Layout", () => {
@@ -60,18 +63,28 @@ describe("Ag-grid", () => {
   });
 
   describe("filtering", () => {
+    function getHeaderFilterIcon(byText: string) {
+      let element = document
+        .querySelector(headerColumnNamed(byText))
+        ?.querySelector("span.ag-icon-menu");
+      assert(
+        element !== null && element !== undefined,
+        `Unable to find an header element with text ${byText}.`
+      );
+      return element;
+    }
+
     it("should filter data", async () => {
       render(<App />);
-      await waitForGridToBeInTheDOM();
       await waitForDataToHaveLoaded();
       expect(screen.queryByText("Celica")).toBeInTheDocument();
-      fireEvent.click(document.querySelector("span.ag-icon-menu") as Element);
-      await userEvent.type(
-        screen.getAllByPlaceholderText("Filter...")[0],
-        "Box"
-      );
+      userEvent.click(getHeaderFilterIcon("Model"));
+      userEvent.type(screen.getAllByPlaceholderText("Filter...")[0], "Box");
       await waitFor(() =>
         expect(screen.queryByText("Celica")).not.toBeInTheDocument()
+      );
+      expect(getRowWithIndexIdCellNamed(0, "make")?.textContent).toEqual(
+        "Porsche"
       );
     });
   });

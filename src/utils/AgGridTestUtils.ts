@@ -1,4 +1,5 @@
 import { waitFor } from "@testing-library/react";
+import assert from "node:assert/strict";
 
 // TODO: create parent div reference to handle multiple grids on a page
 // Synchronisation
@@ -100,6 +101,31 @@ const getFirstRowWithNamedCellValue = (cellName: string, cellValue: string) => {
   }
   return undefined;
 };
+
+export const rowWithIndexId = (indexId: number) => {
+  return `.ag-row[row-index="${indexId}"]`;
+};
+
+export function getRowWithIndexIdCellNamed(indexId: number, cellName: string) {
+  return document.querySelector(
+    rowWithIndexId(indexId) + " " + columnNamed(cellName)
+  );
+}
+
+export const headerColumnNamed = (cellName: string) => {
+  return `.ag-header-cell[col-id="${cellName.toLowerCase()}"]`;
+};
+
+export function getHeaderColumn(byText: string) {
+  const element = document
+    .querySelector(headerColumnNamed(byText.toLowerCase()))
+    ?.querySelector<HTMLElement>(" .ag-header-cell-text");
+  assert(
+    element !== null && element !== undefined,
+    `Unable to find an header element with text ${byText}.`
+  );
+  return element;
+}
 
 export {
   // synchronisation methods
