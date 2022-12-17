@@ -20,6 +20,7 @@ function App({ sortCallback }: AppProps) {
   const defaultColDef = useMemo(
     () => ({
       sortable: true,
+      filter: true,
     }),
     []
   );
@@ -32,7 +33,7 @@ function App({ sortCallback }: AppProps) {
 
   const [sortedColumns, setSortedColumns] = useState<Column[] | undefined>();
 
-  const onSortChange = useCallback((event: SortChangedEvent) => {
+  const onSortChanged = useCallback((event: SortChangedEvent) => {
     setSortedColumns(
       event.columnApi.getAllGridColumns().filter((col) => col.isSorting())
     );
@@ -49,7 +50,7 @@ function App({ sortCallback }: AppProps) {
       </div>
       <div className="ag-theme-material" style={{ height: 400, width: 600 }}>
         <AgGridReact
-          onSortChanged={onSortChange}
+          onSortChanged={onSortChanged}
           defaultColDef={defaultColDef}
           rowData={rowData}
           columnDefs={columnDefs}

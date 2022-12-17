@@ -1,66 +1,78 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 import { vi } from "vitest";
 import { SortChangedEvent } from "ag-grid-community";
+import { clickColumnHeaderOf, getSortedColumns } from "./utils/GridUtils";
+import { userEvent } from "@storybook/testing-library";
+import {
+  getRowCellNamed,
+  waitForDataToHaveLoaded,
+  waitForGridToBeInTheDOM,
+} from "./utils/AgGridTestUtils";
 
-describe("App", () => {
-  it("render app", () => {
-    render(<App />);
-    expect(screen.getByText("Make")).toBeInTheDocument();
+describe("Ag-grid", () => {
+  describe("Layout", () => {
+    it("should render table", () => {
+      render(<App />);
+      expect(screen.getByText("Make")).toBeInTheDocument();
+    });
+
+    it("should show data row", async () => {
+      render(<App />);
+      await waitForDataToHaveLoaded();
+      expect(getRowCellNamed(0, "make")?.textContent).toEqual("Toyota");
+      expect(getRowCellNamed(1, "make")?.textContent).toEqual("Ford");
+    });
   });
 
-  function gridDataRowOf(row: number = 1) {
-    return within(screen.getAllByRole("rowgroup")[2]).getAllByRole("row")[
-      row - 1
-    ];
-  }
+  describe("sorting", () => {
+    describe("get", () => {
+      it("should be called when sorting", async () => {
+        const filterFn = vi.fn();
+        render(<App sortCallback={filterFn} />);
+        clickColumnHeaderOf("Make");
+        await waitFor(() => expect(filterFn).toBeCalled());
+      });
 
-  it("should show data row", () => {
-    render(<App />);
-    expect(
-      within(gridDataRowOf(1)).getAllByRole("gridcell")[0]
-    ).toHaveTextContent("Toyota");
-    expect(
-      within(gridDataRowOf(1)).getByRole(
-        (role, element) =>
-          role === "gridcell" && element?.getAttribute("col-id") === "price"
-      )
-    ).toHaveTextContent("35000");
-    expect(screen.getByText("Porsche")).toBeInTheDocument();
+      it("should get the filtered column name when sorting", async () => {
+        let sortEvent: SortChangedEvent;
+        const filterFn = vi
+          .fn()
+          .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
+        render(<App sortCallback={filterFn} />);
+        clickColumnHeaderOf("Make");
+        await waitFor(() =>
+          expect(getSortedColumns(sortEvent)[0].getColId()).toEqual("make")
+        );
+      });
+
+      it("should sort data when click column header", async () => {
+        render(<App />);
+        await waitForGridToBeInTheDOM();
+        await waitForDataToHaveLoaded();
+        fireEvent.click(screen.getByText("Model"));
+        expect(screen.getByText("Sorted Column:")).toBeInTheDocument();
+        await waitFor(() =>
+          expect(screen.getByText("model")).toBeInTheDocument()
+        );
+      });
+    });
   });
 
-  const clickSortColumn = (byText: string) => {
-    fireEvent.click(screen.getByText(byText));
-  };
-
-  it("should be called when sorting", async () => {
-    const filterFn = vi.fn();
-    render(<App sortCallback={filterFn} />);
-    clickSortColumn("Make");
-    await waitFor(() => expect(filterFn).toBeCalled());
-  });
-
-  const getSortedColumn = (sortEvent: SortChangedEvent) => {
-    return sortEvent.columnApi
-      .getAllGridColumns()
-      .filter((col) => col.isSorting())[0];
-  };
-
-  it("should get the filtered column name when sorting", async () => {
-    let sortEvent: SortChangedEvent;
-    const filterFn = vi
-      .fn()
-      .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
-    render(<App sortCallback={filterFn} />);
-    clickSortColumn("Make");
-    await waitFor(() =>
-      expect(getSortedColumn(sortEvent).getColId()).toEqual("make")
-    );
+  describe("filtering", () => {
+    it("should filter data", async () => {
+      render(<App />);
+      await waitForGridToBeInTheDOM();
+      await waitForDataToHaveLoaded();
+      expect(screen.queryByText("Celica")).toBeInTheDocument();
+      fireEvent.click(document.querySelector("span.ag-icon-menu") as Element);
+      await userEvent.type(
+        screen.getAllByPlaceholderText("Filter...")[0],
+        "Box"
+      );
+      await waitFor(() =>
+        expect(screen.queryByText("Celica")).not.toBeInTheDocument()
+      );
+    });
   });
 });
