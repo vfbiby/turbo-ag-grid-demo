@@ -5,33 +5,23 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.min.css";
 import "ag-grid-community/styles/ag-theme-material.min.css";
 import { Column, SortChangedEvent } from "ag-grid-community";
+import {
+  columnDefsData,
+  defaultColDefData,
+  gridData,
+  ICar,
+} from "./fixtures/GridFixture";
 
 interface AppProps {
   sortCallback?: (event: SortChangedEvent) => void;
 }
 
-type ICar = { make: string; model: string; price: number };
-
 function App({ sortCallback }: AppProps) {
-  const [rowData] = useState<ICar[]>([
-    { make: "Toyota", model: "Celica", price: 35000 },
-    { make: "Ford", model: "Mondeo", price: 32000 },
-    { make: "Porsche", model: "Boxster", price: 72000 },
-  ]);
+  const [rowData] = useState<ICar[]>(gridData);
 
-  const defaultColDef = useMemo(
-    () => ({
-      sortable: true,
-      filter: true,
-    }),
-    []
-  );
+  const defaultColDef = useMemo(() => defaultColDefData, []);
 
-  const [columnDefs] = useState([
-    { field: "make" },
-    { field: "model" },
-    { field: "price" },
-  ]);
+  const [columnDefs] = useState(columnDefsData);
 
   const [sortedColumns, setSortedColumns] = useState<Column[] | undefined>();
 
