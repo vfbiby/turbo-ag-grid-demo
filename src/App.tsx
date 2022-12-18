@@ -10,8 +10,10 @@ interface AppProps {
   sortCallback?: (event: SortChangedEvent) => void;
 }
 
+type ICar = { make: string; model: string; price: number };
+
 function App({ sortCallback }: AppProps) {
-  const [rowData] = useState([
+  const [rowData] = useState<ICar[]>([
     { make: "Toyota", model: "Celica", price: 35000 },
     { make: "Ford", model: "Mondeo", price: 32000 },
     { make: "Porsche", model: "Boxster", price: 72000 },

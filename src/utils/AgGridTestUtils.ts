@@ -1,8 +1,4 @@
 import { waitFor } from "@testing-library/react";
-import assert from "node:assert/strict";
-
-// TODO: create parent div reference to handle multiple grids on a page
-// Synchronisation
 
 const waitForGridToBeInTheDOM = () => {
   return waitFor(() => {
