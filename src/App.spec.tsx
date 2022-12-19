@@ -1,15 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
-import { vi } from "vitest";
-import { SortChangedEvent } from "ag-grid-community";
-import { clickHeaderSortIconOf } from "./utils/GridUtils";
 import { userEvent } from "@storybook/testing-library";
 import {
   waitForDataToHaveLoaded,
   waitForGridToBeInTheDOM,
 } from "./utils/AgGridTestUtils";
 import { AgGridSelector } from "./utils/AgGridSelector";
-import { formatColumn, getSortedColumns } from "./components/sort/SortedColumn";
 
 describe("Ag-grid", () => {
   describe("Layout", () => {
@@ -33,65 +29,7 @@ describe("Ag-grid", () => {
 
   describe("sorting", () => {
     describe("get", () => {
-      it("should be called when sorting", async () => {
-        const filterFn = vi.fn();
-        render(<App sortCallback={filterFn} />);
-        clickHeaderSortIconOf("Make");
-        await waitFor(() => expect(filterFn).toBeCalled());
-      });
-
-      it("should get the sorted column name when sorting", async () => {
-        let sortEvent: SortChangedEvent;
-        const filterFn = vi
-          .fn()
-          .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
-        render(<App sortCallback={filterFn} />);
-        clickHeaderSortIconOf("Make");
-        await waitFor(() =>
-          expect(getSortedColumns(sortEvent)[0].getColId()).toEqual("make")
-        );
-      });
-
-      it("should get the sorting is asc when clicked header once", async () => {
-        let sortEvent: SortChangedEvent;
-        const filterFn = vi
-          .fn()
-          .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
-        render(<App sortCallback={filterFn} />);
-        clickHeaderSortIconOf("Make");
-        await waitFor(() =>
-          expect(getSortedColumns(sortEvent)[0].getSort()).toEqual("asc")
-        );
-      });
-
-      it("should get the sorting is desc when clicked header twice", async () => {
-        let sortEvent: SortChangedEvent;
-        const filterFn = vi
-          .fn()
-          .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
-        render(<App sortCallback={filterFn} />);
-        clickHeaderSortIconOf("Make");
-        clickHeaderSortIconOf("Make");
-        await waitFor(() =>
-          expect(getSortedColumns(sortEvent)[0].getSort()).toEqual("desc")
-        );
-      });
-
-      it("should get the formatted sorted columns", async () => {
-        let sortEvent: SortChangedEvent;
-        const filterFn = vi
-          .fn()
-          .mockImplementation((event: SortChangedEvent) => (sortEvent = event));
-        render(<App sortCallback={filterFn} />);
-        clickHeaderSortIconOf("Make");
-        await waitFor(() =>
-          expect(formatColumn(getSortedColumns(sortEvent))).toEqual([
-            { name: "make", order: "asc" },
-          ])
-        );
-      });
-
-      it("should sort data when click column header", async () => {
+      it("should show sorted column when click column header", async () => {
         render(<App />);
         await waitForGridToBeInTheDOM();
         await waitForDataToHaveLoaded();
