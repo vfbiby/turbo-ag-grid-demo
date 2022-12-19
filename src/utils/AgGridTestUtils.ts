@@ -1,4 +1,5 @@
-import { waitFor } from "@testing-library/react";
+import { fireEvent, waitFor } from "@testing-library/react";
+import { AgGridSelector } from "./AgGridSelector";
 
 const waitForGridToBeInTheDOM = () => {
   return waitFor(() => {
@@ -87,6 +88,11 @@ const getFirstRowWithNamedCellValue = (cellName: string, cellValue: string) => {
     }
   }
   return undefined;
+};
+
+export const clickSortIconOf = (byText: string) => {
+  let gridSelector = new AgGridSelector();
+  fireEvent.click(gridSelector.getHeaderOf(byText).getSortIcon());
 };
 
 export {
