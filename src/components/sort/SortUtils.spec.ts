@@ -1,23 +1,72 @@
-import { getSortedColumns } from "./SortUtils";
+import { formatSortedColumn, getSortedColumns } from "./SortUtils";
 import { SortChangedEvent } from "ag-grid-community";
 
 describe("SortUtils", () => {
-  it("should get one sorted column", () => {
-    const event = generateEvent({
-      gridColumns: [getMockColumn({ sorting: true })],
+  describe("GetSortedColumns", () => {
+    it("should get one sorted column", () => {
+      const event = generateEvent({
+        gridColumns: [getMockColumn({ sorting: true })],
+      });
+      expect(getSortedColumns(event).length).toEqual(1);
     });
-    expect(getSortedColumns(event).length).toEqual(1);
+
+    it("should get two sorted columns", () => {
+      const event = generateEvent({
+        gridColumns: [
+          getMockColumn({ sorting: true }),
+          getMockColumn({ sorting: true }),
+          getMockColumn({ sorting: false }),
+        ],
+      });
+      expect(getSortedColumns(event).length).toEqual(2);
+    });
+
+    it("should get sorted column's name", () => {
+      const event = generateEvent({
+        gridColumns: [getMockColumn({ colId: "make" })],
+      });
+      expect(getSortedColumns(event)[0].getColId()).toEqual("make");
+    });
+
+    it("should get sorted column's order", () => {
+      const event = generateEvent({
+        gridColumns: [getMockColumn({ order: "desc" })],
+      });
+      expect(getSortedColumns(event)[0].getSort()).toEqual("desc");
+    });
   });
 
-  it("should get two sorted columns", () => {
-    const event = generateEvent({
-      gridColumns: [
-        getMockColumn({ sorting: true }),
-        getMockColumn({ sorting: true }),
-        getMockColumn({ sorting: false }),
-      ],
+  describe("FormatSortedColumns", () => {
+    it("should format one sorted columns", () => {
+      const event = generateEvent({
+        gridColumns: [getMockColumn({ colId: "model", order: "desc" })],
+      });
+      expect(formatSortedColumn(getSortedColumns(event))).toEqual([
+        {
+          name: "model",
+          order: "desc",
+        },
+      ]);
     });
-    expect(getSortedColumns(event).length).toEqual(2);
+
+    it("should format two sorted columns", () => {
+      const event = generateEvent({
+        gridColumns: [
+          getMockColumn({ colId: "model", order: "desc" }),
+          getMockColumn({ colId: "make" }),
+        ],
+      });
+      expect(formatSortedColumn(getSortedColumns(event))).toEqual([
+        {
+          name: "model",
+          order: "desc",
+        },
+        {
+          name: "make",
+          order: "asc",
+        },
+      ]);
+    });
   });
 });
 
@@ -33,8 +82,18 @@ function generateEvent({
   } as SortChangedEvent;
 }
 
-function getMockColumn({ sorting }: { sorting: boolean }) {
+function getMockColumn({
+  sorting = true,
+  colId = "make",
+  order = "asc",
+}: {
+  sorting?: boolean;
+  colId?: string;
+  order?: string;
+}) {
   return {
     isSorting: () => sorting,
+    getColId: () => colId,
+    getSort: () => order,
   };
 }

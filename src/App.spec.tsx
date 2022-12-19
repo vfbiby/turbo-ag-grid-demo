@@ -28,17 +28,15 @@ describe("Ag-grid", () => {
   });
 
   describe("sorting", () => {
-    describe("get", () => {
-      it("should show sorted column when click column header", async () => {
-        render(<App />);
-        await waitForGridToBeInTheDOM();
-        await waitForDataToHaveLoaded();
-        fireEvent.click(screen.getByText("Model"));
-        expect(screen.getByText("Sorted Column:")).toBeInTheDocument();
-        await waitFor(() =>
-          expect(screen.getByText("model")).toBeInTheDocument()
-        );
-      });
+    it("should show sorted column when click column header", async () => {
+      render(<App />);
+      await waitForGridToBeInTheDOM();
+      await waitForDataToHaveLoaded();
+      fireEvent.click(screen.getByText("Model"));
+      expect(screen.getByText("Sorted Column:")).toBeInTheDocument();
+      await waitFor(() =>
+        expect(screen.getByText("model")).toBeInTheDocument()
+      );
     });
   });
 
