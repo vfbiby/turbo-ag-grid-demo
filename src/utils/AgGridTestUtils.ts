@@ -95,6 +95,17 @@ export const clickSortIconOf = (byText: string) => {
   fireEvent.click(gridSelector.getHeaderOf(byText).getSortIcon());
 };
 
+export function radioOperatorOf(name: string) {
+  return document.querySelector<HTMLElement>(
+    `.ag-filter-condition-operator-${name} .ag-input-field-label`
+  );
+}
+
+export function clickFilterIconOf(cellName: string) {
+  const gridSelector = new AgGridSelector();
+  fireEvent.click(gridSelector.getHeaderOf(cellName).getFilterIcon());
+}
+
 export {
   // synchronisation methods
   waitForGridToBeInTheDOM,

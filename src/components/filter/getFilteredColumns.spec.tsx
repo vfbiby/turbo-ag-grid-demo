@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import { AgGridReact } from "ag-grid-react";
 import {
@@ -8,9 +8,12 @@ import {
   ICar,
 } from "../../fixtures/GridFixture";
 import { FilterChangedEvent } from "ag-grid-community";
-import { AgGridSelector } from "../../utils/AgGridSelector";
 import { userEvent } from "@storybook/testing-library";
-import { waitForDataToHaveLoaded } from "../../utils/AgGridTestUtils";
+import {
+  clickFilterIconOf,
+  radioOperatorOf,
+  waitForDataToHaveLoaded,
+} from "../../utils/AgGridTestUtils";
 
 function SimpleFilterGrid({ onFilterChange }: { onFilterChange: () => void }) {
   return (
@@ -24,23 +27,6 @@ function SimpleFilterGrid({ onFilterChange }: { onFilterChange: () => void }) {
     </div>
   );
 }
-
-function clickFilterIconOf(cellName: string) {
-  const gridSelector = new AgGridSelector();
-  fireEvent.click(gridSelector.getHeaderOf(cellName).getFilterIcon());
-}
-
-const condition1 = {
-  filter: "Box",
-  filterType: "text",
-  type: "contains",
-};
-
-const condition2 = {
-  filter: "C",
-  filterType: "text",
-  type: "contains",
-};
 
 describe("GetFilteredColumns", () => {
   beforeEach(async () => await setup());
@@ -77,29 +63,44 @@ describe("GetFilteredColumns", () => {
     await userEvent.type(screen.getAllByPlaceholderText("Filter...")[0], "Box");
     await userEvent.type(screen.getAllByPlaceholderText("Filter...")[1], "C");
     await waitFor(() => {
-      expect(getFilteredColumns<ICar>(filterEvent).model).toEqual({
-        condition1,
-        condition2,
-        filterType: "text",
-        operator: "AND",
-      });
+      expect(getFilteredColumns<ICar>(filterEvent).model).toEqual(
+        expectedObj("AND")
+      );
     });
   });
 
   it("should get one filter with or condition when filtering on one column or", async () => {
     clickFilterIconOf("Model");
     await userEvent.type(screen.getAllByPlaceholderText("Filter...")[0], "Box");
-    await userEvent.click(screen.getAllByRole("radio")[1]);
+    await userEvent.click(radioOperatorOf("or") as HTMLElement);
     await userEvent.type(screen.getAllByPlaceholderText("Filter...")[1], "C");
     await waitFor(() => {
-      expect(getFilteredColumns<ICar>(filterEvent).model).toEqual({
-        condition1,
-        condition2,
-        filterType: "text",
-        operator: "OR",
-      });
+      expect(getFilteredColumns<ICar>(filterEvent).model).toEqual(
+        expectedObj("OR")
+      );
     });
   });
+
+  const condition1 = {
+    filter: "Box",
+    filterType: "text",
+    type: "contains",
+  };
+
+  const condition2 = {
+    filter: "C",
+    filterType: "text",
+    type: "contains",
+  };
+
+  function expectedObj(operator: string) {
+    return {
+      condition1,
+      condition2,
+      filterType: "text",
+      operator: operator,
+    };
+  }
 
   function getFilteredColumns<T>(filterEvent: FilterChangedEvent<T>) {
     return filterEvent.api.getFilterModel() as {

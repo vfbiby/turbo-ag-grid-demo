@@ -1,13 +1,14 @@
 import { render } from "@testing-library/react";
-import App from "../App";
 import { AgGridSelector } from "./AgGridSelector";
 import { waitForDataToHaveLoaded } from "./AgGridTestUtils";
+import { SimpleGridComponent } from "../components/sort/GetSortedColumns";
+import { vi } from "vitest";
 
 describe("AgGridSelector", () => {
   let selector: AgGridSelector;
 
   async function setupAgGrid() {
-    render(<App />);
+    render(<SimpleGridComponent sortCallbackFn={vi.fn()} />);
     selector = new AgGridSelector();
     await waitForDataToHaveLoaded();
   }
