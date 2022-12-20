@@ -52,11 +52,6 @@ const columnNamed = (cellName: string) => {
   return `.ag-cell[col-id="${cellName}"]`;
 };
 
-// given a cell, get the value of the cell
-const getCellValue = (cell: Element) => {
-  return cell;
-};
-
 const findFirstContainerElementWithClass = (
   anElement: Element,
   findClassName: string
@@ -77,13 +72,13 @@ const findFirstContainerElementWithClass = (
 
 const getNamedCellsWithValues = (cellName: string, cellValue: string) => {
   const cells = Array.from(document.querySelectorAll(columnNamed(cellName)));
-  return cells.filter((cell) => getCellValue(cell)?.textContent === cellValue);
+  return cells.filter((cell) => cell?.textContent === cellValue);
 };
 
 const getFirstRowWithNamedCellValue = (cellName: string, cellValue: string) => {
   const cells = getNamedCellsWithValues(cellName, cellValue);
   for (const cell of cells) {
-    if (getCellValue(cell)?.textContent === cellValue) {
+    if (cell?.textContent === cellValue) {
       return findFirstContainerElementWithClass(cell, "ag-row");
     }
   }
@@ -116,5 +111,4 @@ export {
   getFirstRowWithNamedCellValue,
   getNamedCellsWithValues,
   findFirstContainerElementWithClass,
-  getCellValue,
 };
