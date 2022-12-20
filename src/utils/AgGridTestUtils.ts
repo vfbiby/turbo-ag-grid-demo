@@ -14,8 +14,16 @@ const waitForDataToHaveLoaded = () => {
   });
 };
 
+type stringOrNull = string | undefined | null;
+
+type rowProps = {
+  firstRow?: stringOrNull;
+  lastRow?: stringOrNull;
+  rowCount?: stringOrNull;
+};
+
 const waitForPagination = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise<rowProps>((resolve, reject) => {
     let paginationPanel: Element | null | undefined = undefined;
 
     waitFor(() => {
@@ -78,6 +86,7 @@ const getNamedCellsWithValues = (cellName: string, cellValue: string) => {
 const getFirstRowWithNamedCellValue = (cellName: string, cellValue: string) => {
   const cells = getNamedCellsWithValues(cellName, cellValue);
   for (const cell of cells) {
+    /* istanbul ignore else -- @preserve */
     if (cell?.textContent === cellValue) {
       return findFirstContainerElementWithClass(cell, "ag-row");
     }

@@ -9,7 +9,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./setup.js",
     coverage: {
-      provider: "c8",
+      provider: "istanbul",
       statements: 100,
       branches: 100,
       reporter: ["text", "json", "html"],
