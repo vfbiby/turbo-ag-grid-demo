@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { SycmParser } from "./SycmParser";
 import { AgGridReact } from "ag-grid-react";
+import { Button } from "@mui/material";
 
 export type SycmDataProps = {
   shopName: string;
@@ -40,10 +41,12 @@ export function Sycm() {
         ></textarea>
       </div>
       <div>
-        <button onClick={onParseData}>parse</button>
+        <Button variant="outlined" onClick={onParseData}>
+          parse
+        </Button>
       </div>
       <div className="ag-theme-material" style={{ height: 400, width: 1000 }}>
-        <AgGridReact columnDefs={colDef} rowData={rowData}></AgGridReact>
+        <AgGridReact columnDefs={colDef} rowData={rowData} />
       </div>
     </div>
   );
