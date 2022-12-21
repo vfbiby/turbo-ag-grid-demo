@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@storybook/testing-library";
 import { Sycm } from "./Sycm";
 import { waitForDataToHaveLoaded } from "../../utils/AgGridTestUtils";
+import { AgGridSelector } from "../../utils/AgGridSelector";
 
 describe("Sycm page", () => {
   describe("Layout", () => {
@@ -57,7 +58,10 @@ describe("Sycm page", () => {
       userEvent.paste(screen.getByRole("textbox"), data);
       userEvent.click(screen.getByRole("button", { name: "parse" }));
       await waitForDataToHaveLoaded();
-      expect(screen.getByText("南瓜谷NAGUAGU")).toBeInTheDocument();
+      const gridSelector = new AgGridSelector();
+      expect(gridSelector.getRowOf(0).getText()).toEqual(
+        "南瓜谷NAGUAGU4323513156913099416"
+      );
     });
   });
 });
