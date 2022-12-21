@@ -1,7 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
 import { SycmParser } from "./SycmParser";
 import { AgGridReact } from "ag-grid-react";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextareaAutosize,
+} from "@mui/material";
 
 export type SycmDataProps = {
   shopName: string;
@@ -19,6 +26,7 @@ export function Sycm() {
   const onParseData = useCallback(() => {
     const parser = new SycmParser();
     setRowData(parser.parse(rawData));
+    setIsOpen(false);
   }, [rawData]);
 
   const colDef = useMemo(
@@ -36,11 +44,22 @@ export function Sycm() {
     <div>
       <div>
         {isOpen && (
-          <textarea
-            style={{ width: "600px", height: "200px" }}
-            value={rawData}
-            onChange={(e) => setRawData(e.target.value)}
-          />
+          <Dialog open={isOpen}>
+            <DialogTitle>Paste data to parse</DialogTitle>
+            <DialogContent>
+              <TextareaAutosize
+                style={{ width: "500px" }}
+                minRows={10}
+                value={rawData}
+                onChange={(e) => setRawData(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={onParseData}>
+                parse
+              </Button>
+            </DialogActions>
+          </Dialog>
         )}
       </div>
       <div>
