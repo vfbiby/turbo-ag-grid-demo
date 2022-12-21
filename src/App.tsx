@@ -2,8 +2,6 @@ import { useCallback, useMemo, useState } from "react";
 import "./App.css";
 import { AgGridReact } from "ag-grid-react";
 
-import "ag-grid-community/styles/ag-grid.min.css";
-import "ag-grid-community/styles/ag-theme-material.min.css";
 import { Column, SortChangedEvent } from "ag-grid-community";
 import {
   columnDefsData,

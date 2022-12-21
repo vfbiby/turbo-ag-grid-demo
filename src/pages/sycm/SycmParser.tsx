@@ -1,5 +1,7 @@
+import { SycmDataProps } from "./Sycm";
+
 export class SycmParser {
-  parse(row: string) {
+  parse(row: string): SycmDataProps[] {
     const parsedRows = [];
     const allRows = row.split("\n");
     for (let row of allRows) {
@@ -18,6 +20,6 @@ export class SycmParser {
   }
 
   static toNumber(string: string) {
-    return Number(string.split(",").join(""));
+    return Number(string?.split(",").join(""));
   }
 }

@@ -50,7 +50,8 @@ describe("Parser", () => {
   });
 
   it("should parse two row data", () => {
-    const row = ` 南瓜谷NAGUAGU 43,235 131,569 130,994 16 竞店分析\nASM ANNA 安娜 44,466 171,187 171,187 6 竞店分析`;
+    const row =
+      " 南瓜谷NAGUAGU 43,235 131,569 130,994 16 竞店分析\nASM ANNA 安娜 44,466 171,187 171,187 6 竞店分析";
     const parser = new SycmParser();
     expect(parser.parse(row)[0].shopName).toEqual("南瓜谷NAGUAGU");
     expect(parser.parse(row)[1].shopName).toEqual("ASM ANNA 安娜");

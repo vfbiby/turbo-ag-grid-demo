@@ -1,10 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { Sycm } from "./pages/sycm/Sycm";
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+import "ag-grid-community/styles/ag-grid.min.css";
+import "ag-grid-community/styles/ag-theme-material.min.css";
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+    <Sycm />
+  </React.StrictMode>
+);
