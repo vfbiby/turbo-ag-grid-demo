@@ -6,16 +6,14 @@ import { AgGridSelector } from "../../utils/AgGridSelector";
 
 describe("Sycm page", () => {
   describe("Layout", () => {
-    it("should show textarea for input data", () => {
+    it("should show paste data button", () => {
       render(<Sycm />);
-      expect(screen.getByRole("textbox")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "paste" })).toBeInTheDocument();
     });
 
     it("should show parse button", () => {
       render(<Sycm />);
-      expect(screen.getByRole("button", { name: "parse" })).toHaveTextContent(
-        "parse"
-      );
+      expect(screen.getByRole("button", { name: "parse" })).toBeInTheDocument();
     });
 
     it("should show column name shopName", () => {
@@ -45,8 +43,15 @@ describe("Sycm page", () => {
   });
 
   describe("Interactions", () => {
+    it("should show textarea when click paste button", async () => {
+      render(<Sycm />);
+      userEvent.click(screen.getByRole("button", { name: "paste" }));
+      expect(screen.getByRole("textbox")).toBeInTheDocument();
+    });
+
     it("should set textarea data to state", () => {
       render(<Sycm />);
+      userEvent.click(screen.getByRole("button", { name: "paste" }));
       userEvent.paste(screen.getByRole("textbox"), "Hello");
       expect(screen.getByRole("textbox")).toHaveValue("Hello");
     });
@@ -55,6 +60,7 @@ describe("Sycm page", () => {
       render(<Sycm />);
       const data =
         " 南瓜谷NAGUAGU 43,235 131,569 130,994 16 竞店分析\nASM ANNA 安娜 44,466 171,187 171,187 6 竞店分析";
+      userEvent.click(screen.getByRole("button", { name: "paste" }));
       userEvent.paste(screen.getByRole("textbox"), data);
       userEvent.click(screen.getByRole("button", { name: "parse" }));
       await waitForDataToHaveLoaded();

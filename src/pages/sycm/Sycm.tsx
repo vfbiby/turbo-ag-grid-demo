@@ -14,6 +14,7 @@ export type SycmDataProps = {
 export function Sycm() {
   const [rawData, setRawData] = useState("");
   const [rowData, setRowData] = useState<SycmDataProps[] | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const onParseData = useCallback(() => {
     const parser = new SycmParser();
@@ -34,14 +35,19 @@ export function Sycm() {
   return (
     <div>
       <div>
-        <textarea
-          style={{ width: "600px", height: "200px" }}
-          value={rawData}
-          onChange={(e) => setRawData(e.target.value)}
-        ></textarea>
+        {isOpen && (
+          <textarea
+            style={{ width: "600px", height: "200px" }}
+            value={rawData}
+            onChange={(e) => setRawData(e.target.value)}
+          />
+        )}
       </div>
       <div>
-        <Button variant="outlined" onClick={onParseData}>
+        <Button variant="outlined" onClick={() => setIsOpen(true)}>
+          paste
+        </Button>
+        <Button variant="contained" onClick={onParseData}>
           parse
         </Button>
       </div>
