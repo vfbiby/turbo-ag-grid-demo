@@ -5,11 +5,12 @@ import { Sycm } from "./pages/sycm/Sycm";
 
 import "ag-grid-community/styles/ag-grid.min.css";
 import "ag-grid-community/styles/ag-theme-material.min.css";
-import { CssBaseline } from "@mui/material";
+import { ProSidebarProvider } from "react-pro-sidebar";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <CssBaseline />
-    <Sycm />
+    <ProSidebarProvider>
+      <Sycm />
+    </ProSidebarProvider>
   </React.StrictMode>
 );

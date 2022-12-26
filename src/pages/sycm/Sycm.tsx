@@ -1,20 +1,35 @@
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { SycmParser } from "./SycmParser";
 import { AgGridReact } from "ag-grid-react";
 import {
   Box,
   Button,
-  Container,
   createTheme,
   CssBaseline,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Stack,
   TextareaAutosize,
   ThemeProvider,
 } from "@mui/material";
+import {
+  Menu,
+  MenuItem,
+  Sidebar,
+  SubMenu,
+  useProSidebar,
+} from "react-pro-sidebar";
+import {
+  AccountBalanceOutlined,
+  AcUnitOutlined,
+  CalendarMonthOutlined,
+  DehazeOutlined,
+  PieChartOutlineOutlined,
+  ShowChartOutlined,
+} from "@mui/icons-material";
 
 export type SycmDataProps = {
   shopName: string;
@@ -33,6 +48,7 @@ export function Sycm() {
       mode: "light",
     },
   });
+  const { collapseSidebar } = useProSidebar();
 
   const onParseData = useCallback(() => {
     const parser = new SycmParser();
@@ -54,53 +70,82 @@ export function Sycm() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Container maxWidth="md">
-        <div>
-          {isOpen && (
-            <Dialog open={isOpen}>
-              <DialogTitle>Paste data to parse</DialogTitle>
-              <DialogContent>
-                <TextareaAutosize
-                  style={{ width: "500px" }}
-                  minRows={10}
-                  value={rawData}
-                  onChange={(e) => setRawData(e.target.value)}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button variant="contained" onClick={onParseData}>
-                  parse
-                </Button>
-              </DialogActions>
-            </Dialog>
-          )}
-        </div>
-
-        <Stack m={1} direction="row" justifyContent="flex-end" spacing={1}>
-          <Button
-            sx={{
-              mx: 1,
-            }}
-            color="warning"
-            variant="outlined"
-            onClick={() => setIsOpen(true)}
-          >
-            paste
-          </Button>
-          <Button variant="contained" onClick={onParseData}>
-            parse
-          </Button>
-        </Stack>
-
-        <Box
-          borderRadius={2}
-          overflow="hidden"
-          className="ag-theme-material"
-          style={{ height: "80vh", width: "100vh" }}
-        >
-          <AgGridReact columnDefs={colDef} rowData={rowData} />
+      <Box display="flex">
+        <Box>
+          <Sidebar style={{ height: "100vh" }}>
+            <Menu>
+              <SubMenu label="Charts" icon={<AcUnitOutlined />}>
+                <MenuItem icon={<PieChartOutlineOutlined />}>
+                  Pie charts
+                </MenuItem>
+                <MenuItem icon={<ShowChartOutlined />}>Line charts</MenuItem>
+              </SubMenu>
+              <MenuItem icon={<AccountBalanceOutlined />}>
+                Documentation
+              </MenuItem>
+              <MenuItem icon={<CalendarMonthOutlined />}> Calendar </MenuItem>
+            </Menu>
+          </Sidebar>
         </Box>
-      </Container>
+        <Box>
+          <div>
+            {isOpen && (
+              <Dialog open={isOpen}>
+                <DialogTitle>Paste data to parse</DialogTitle>
+                <DialogContent>
+                  <TextareaAutosize
+                    style={{ width: "500px" }}
+                    minRows={10}
+                    value={rawData}
+                    onChange={(e) => setRawData(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button variant="contained" onClick={onParseData}>
+                    parse
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            )}
+          </div>
+
+          <Stack
+            m={1}
+            direction="row"
+            justifyContent="space-between"
+            spacing={1}
+          >
+            <Box justifyContent="flex-start">
+              <IconButton onClick={() => collapseSidebar()}>
+                <DehazeOutlined />
+              </IconButton>
+            </Box>
+            <Box>
+              <Button
+                sx={{
+                  mx: 1,
+                }}
+                color="warning"
+                variant="outlined"
+                onClick={() => setIsOpen(true)}
+              >
+                paste
+              </Button>
+              <Button variant="contained" onClick={onParseData}>
+                parse
+              </Button>
+            </Box>
+          </Stack>
+          <Box
+            borderRadius={2}
+            overflow="hidden"
+            className="ag-theme-material"
+            style={{ height: "80vh", width: "100vh" }}
+          >
+            <AgGridReact columnDefs={colDef} rowData={rowData} />
+          </Box>
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 }

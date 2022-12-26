@@ -30,6 +30,7 @@ specifiers:
   jsdom: ^20.0.3
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-pro-sidebar: 1.0.0-alpha.9
   turbo: ^1.6.3
   typescript: ^4.9.4
   vite: ^4.0.3
@@ -45,6 +46,7 @@ dependencies:
   ag-grid-react: 28.2.1_kap55pawlsqblyi2mqg5b5ge64
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-pro-sidebar: 1.0.0-alpha.9_77xq4ymqds5h2liqkuci4r3swm
 
 devDependencies:
   '@babel/core': 7.20.7
@@ -5787,6 +5789,10 @@ packages:
       static-extend: 0.1.2
     dev: true
 
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
+
   /clean-css/4.2.4:
     resolution: {integrity: sha512-EJUDT7nDVFDvaQgAo2G/PJvxmp1o/c6iXLbswsBbUFXi1Nr+AjA2cKmfbKDMjMvzEe75g3P6JkaDDAKk96A85A==}
     engines: {node: '>= 4.0'}
@@ -10859,6 +10865,23 @@ packages:
   /react-merge-refs/1.1.0:
     resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==}
     dev: true
+
+  /react-pro-sidebar/1.0.0-alpha.9_77xq4ymqds5h2liqkuci4r3swm:
+    resolution: {integrity: sha512-w1ySfoPirlTGXCZW8jfnI7svZ+MqI629r58eWOEjvpy2AAN5C2hHG2/K6fpzwrQCCLhkgGdn6tMRwsZ4DgFjHw==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@emotion/react': 11.10.5_3grbeiqrb6djg67fiejiqngkdi
+      '@emotion/styled': 11.10.5_pwtpayi7py7ecifctvjbac33ee
+      '@popperjs/core': 2.11.6
+      classnames: 2.3.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@types/react'
+    dev: false
 
   /react-refresh/0.11.0:
     resolution: {integrity: sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==}
